@@ -1,1 +1,43 @@
-spring.application.name=kafka-streams-avro
+spring:
+  application:
+    name: kafka-streams-avro
+  kafka:
+    bootstrap-servers: localhost:29093,localhost:39093,localhost:49093
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: http://localhost:8081
+        specific.avro.reader: false
+        value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicNameStrategy
+        spring.json.trusted.packages: "*"
+      group-id: ${spring.application.name}
+    producer:
+      properties:
+        schema.registry.url: http://localhost:8081
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+    properties:
+      specific.avro.reader: false
+      auto.register.schemas: true
+      schema.registry.url: http://localhost:8081
+    streams:
+      properties:
+        schema.registry.url: http://localhost:8081
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        commit.interval.ms: 10000
+        state.dir: /tmp/kafka-streams
+    security:
+      protocol: SSL
+    ssl:
+      trust-store-location: classpath:kafka.server.truststore.jks
+      trust-store-password: password123
+      key-store-location: classpath:kafka.server.keystore.jks
+      key-store-password: password123
+      key-password: password123
+
+topic:
+  electronic-orders-topic: "electronic-orders-topic"
+  electronic-order-results-topic: "electronic-order-results"

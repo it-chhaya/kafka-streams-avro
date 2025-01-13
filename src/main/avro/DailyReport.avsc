@@ -1,0 +1,13 @@
+{
+  "namespace": "co.istad.streamsavro.avro",
+  "type": "record",
+  "name": "DailyReport",
+  "fields": [
+    {"name": "report_id", "type": "string" },
+    {"name": "total_revenue", "type": "double",
+      "default": 0.0
+    },
+    {"name": "revenue_avg", "type": "double", "default": 0.0},
+    {"name": "time", "type": "long" }
+  ]
+}
