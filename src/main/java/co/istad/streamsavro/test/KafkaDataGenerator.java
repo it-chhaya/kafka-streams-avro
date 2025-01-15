@@ -35,7 +35,7 @@ public class KafkaDataGenerator {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void generateElectronicOrders() {
         ElectronicOrder electronicOrder = new ElectronicOrder();
         electronicOrder.setOrderId(UUID.randomUUID().toString());

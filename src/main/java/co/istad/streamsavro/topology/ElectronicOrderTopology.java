@@ -19,6 +19,7 @@ import java.time.Duration;
 public class ElectronicOrderTopology {
 
     private final SpecificAvroSerde<ElectronicOrder> electronicOrderSerde;
+
     @Value("${topic.electronic-orders-topic}")
     private String electronicOrdersTopic;
 
