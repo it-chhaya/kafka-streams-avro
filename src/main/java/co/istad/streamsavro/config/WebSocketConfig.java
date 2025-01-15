@@ -14,14 +14,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*");
-                //.withSockJS();
+                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry
                 .setApplicationDestinationPrefixes("/app")
-                .enableSimpleBroker("/topic/notification", "/topic/message");
+                .enableSimpleBroker("/topic/notification",
+                        "/topic/message");
     }
 }

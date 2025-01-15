@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +46,24 @@ public class KafkaDataGenerator {
         electronicOrder.setTime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         kafkaTemplate.send(electronicOrdersTopic, electronicOrder.getElectronicId(), electronicOrder);
         log.info("Electronic orders generated: {}", electronicOrder.getElectronicId());
+    }
+
+
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Scheduled(fixedRate = 5000)
+    public void testWebsocket() {
+
+        NotificationMsg notificationMsg = NotificationMsg.builder()
+                .message(users.get(random.nextInt(users.size())))
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+
+        messagingTemplate.convertAndSend(
+                "/topic/notification",
+                notificationMsg
+        );
+
     }
 
 }

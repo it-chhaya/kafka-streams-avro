@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+  <title>Background Process Demo</title>
+  <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
+  <script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script type="text/javascript">
+    // Store socket connection
+    let stompClient = null;
+
+    let processingRequest = false;
+
+    function connect() {
+      const socket = new SockJS('/ws');
+      stompClient = Stomp.over(socket);
+      stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/notification', function(notification) {
+          const data = JSON.parse(notification.body);
+          console.log(data)
+          showNotification(data);
+          setProcessingState(false);
+        });
+      });
+    }
+
+    function setProcessingState(isProcessing) {
+      processingRequest = isProcessing;
+      const button = document.getElementById('processButton');
+      const loader = document.getElementById('loader');
+      const buttonText = document.getElementById('buttonText');
+
+      if (isProcessing) {
+        button.disabled = true;
+        button.classList.add('bg-gray-400');
+        button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+        loader.classList.remove('hidden');
+        buttonText.textContent = 'Processing...';
+      } else {
+        button.disabled = false;
+        button.classList.remove('bg-gray-400');
+        button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+        loader.classList.add('hidden');
+        buttonText.textContent = 'Start Background Process';
+      }
+    }
+
+    function startProcess() {
+      if (processingRequest) return;
+
+      setProcessingState(true);
+
+      fetch('/start-process', {
+        method: 'POST',
+        body: 'Test process data',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        credentials: 'include'
+      }).then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Process start failed');
+      })
+              .then(data => {
+                console.log('Process started:', data);
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                setProcessingState(false);
+                showNotification({
+                  message: 'Error starting process: ' + error.message,
+                  timestamp: new Date().toISOString()
+                });
+              });
+    }
+
+    function showNotification(notification) {
+      const notificationDiv = document.getElementById('notifications');
+      const message = document.createElement('div');
+      message.className = 'p-4 mb-2 rounded shadow-sm transition-all';
+
+      if (notification.message.includes('completed')) {
+        message.classList.add('bg-green-100', 'text-green-700', 'border-l-4', 'border-green-500');
+      } else if (notification.message.includes('Error') || notification.message.includes('failed')) {
+        message.classList.add('bg-red-100', 'text-red-700', 'border-l-4', 'border-red-500');
+      } else {
+        message.classList.add('bg-blue-100', 'text-blue-700', 'border-l-4', 'border-blue-500');
+      }
+
+      message.textContent = notification.message + ' at ' + new Date(notification.timestamp).toLocaleString();
+      notificationDiv.insertBefore(message, notificationDiv.firstChild);
+    }
+
+    // Connect when page loads
+    document.addEventListener('DOMContentLoaded', connect);
+  </script>
+
+</head>
+<body class="bg-gray-50 min-h-screen p-8">
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold text-gray-800 mb-8">Background Process Demo</h1>
+
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-8 flex justify-between items-center">
+    <div class="text-gray-600">
+      Welcome, <span class="font-semibold">Chhaya</span>!
+    </div>
+    <form action="#" method="post">
+      <button type="submit"
+              class="px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors">
+        Logout
+      </button>
+    </form>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+    <button id="processButton"
+            onclick="startProcess()"
+            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
+      <!-- Loading spinner -->
+      <svg id="loader"
+           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden"
+           xmlns="http://www.w3.org/2000/svg"
+           fill="none"
+           viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span id="buttonText">Start Background Process</span>
+    </button>
+  </div>
+
+  <div id="notifications" class="space-y-4"></div>
+</div>
+</body>
+</html>
