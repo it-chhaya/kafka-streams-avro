@@ -11,13 +11,14 @@
         <h1 class="text-2xl font-bold sm:text-3xl">RTR by ISTAD</h1>
     </div>
 
-    <form action="#" class="mx-auto mb-0 mt-8 max-w-md space-y-4">
+    <form th:action="@{/login}" method="post" class="mx-auto mb-0 mt-8 max-w-md space-y-4">
         <div>
-            <label for="username" class="sr-only">Username</label>
+            <label for="user_username" class="sr-only">Username</label>
 
             <div class="relative">
                 <input
-                        id="username"
+                        id="user_username"
+                        name="user_username"
                         type="text"
                         class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter username"
@@ -43,11 +44,12 @@
         </div>
 
         <div>
-            <label for="password" class="sr-only">Password</label>
+            <label for="user_password" class="sr-only">Password</label>
 
             <div class="relative">
                 <input
-                        id="password"
+                        id="user_password"
+                        name="user_password"
                         type="password"
                         class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter password"

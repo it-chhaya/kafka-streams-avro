@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      name: admin
+      password: admin123
   application:
     name: kafka-streams-avro
   kafka:

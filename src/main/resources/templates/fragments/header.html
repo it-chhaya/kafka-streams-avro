@@ -12,12 +12,16 @@
             >
                 Download All
             </a>
-            <a
-                    href="javascript:void(0)"
-                    class="block px-4 py-2 mt-3 text-center text-red-900 duration-150 font-medium rounded-lg border hover:bg-red-50 sm:mt-0 md:text-sm"
-            >
-                Log out
-            </a>
+            <span>
+                <form th:action="@{/logout}" method="post">
+                    <button
+                            type="submit"
+                            class="inline-block rounded-lg bg-red-500 px-5 py-3 text-md font-medium text-white"
+                    >
+                        Log out
+                    </button>
+                </form>
+            </span>
         </div>
     </div>
 </div>
