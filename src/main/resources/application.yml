@@ -1,3 +1,4 @@
+
 spring:
   security:
     user:
@@ -6,29 +7,29 @@ spring:
   application:
     name: kafka-streams-avro
   kafka:
-    bootstrap-servers: 202.178.125.77:29093,202.178.125.77:39093,202.178.125.77:49093
+    bootstrap-servers: localhost:29093,localhost:39093,localhost:49093
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
       properties:
-        schema.registry.url: http://202.178.125.77:8081
+        schema.registry.url: http://localhost:8081
         specific.avro.reader: false
         value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicNameStrategy
         spring.json.trusted.packages: "*"
       group-id: ${spring.application.name}
     producer:
       properties:
-        schema.registry.url: http://202.178.125.77:8081
+        schema.registry.url: http://localhost:8081
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
     properties:
       specific.avro.reader: false
       auto.register.schemas: true
-      schema.registry.url: http://202.178.125.77:8081
+      schema.registry.url: http://localhost:8081
     streams:
       properties:
-        schema.registry.url: http://202.178.125.77:8081
+        schema.registry.url: http://localhost:8081
         default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
         commit.interval.ms: 10000
@@ -45,3 +46,4 @@ spring:
 topic:
   electronic-orders-topic: "electronic-orders-topic"
   electronic-order-results-topic: "electronic-order-results"
+
