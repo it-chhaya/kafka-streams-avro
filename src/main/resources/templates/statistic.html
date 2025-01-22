@@ -99,7 +99,7 @@
             <tbody class="divide-y divide-gray-200">
             <tr>
                 <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">1</td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">Daily Report</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">Report 001</td>
                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">20-Jan-2025</td>
                 <td class="whitespace-nowrap px-4 py-2">
                     <a
@@ -108,19 +108,20 @@
                     >
                         View
                     </a>
-                    <a
-                            href="#"
-                            class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                    <button
+                            data-report-id="1"
+                            id="btn-excel-report-1"
+                            class="btn-excel inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
                     >
                         Excel
-                    </a>
+                    </button>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">2</td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">Daily Revenue</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">Report 002</td>
                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">20-Jan-2025</td>
                 <td class="whitespace-nowrap px-4 py-2">
                     <a
@@ -129,12 +130,13 @@
                     >
                         View
                     </a>
-                    <a
-                            href="#"
+                    <button
+                            data-report-id="2"
+                            id="btn-excel-report-2"
                             class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
                     >
                         Excel
-                    </a>
+                    </button>
                 </td>
             </tr>
 
@@ -186,6 +188,7 @@
             data: data
         });
     </script>
+    <script src="/statistic.js"></script>
 </th:block>
 
 </body>
