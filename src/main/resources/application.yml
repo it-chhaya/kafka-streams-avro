@@ -1,4 +1,9 @@
 spring:
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
   datasource:
     url: jdbc:postgresql://localhost:5168/employees
     username: postgres
@@ -7,7 +12,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   security:
     user:
       name: admin
@@ -54,3 +59,10 @@ topic:
   electronic-orders-topic: "electronic-orders-topic"
   electronic-order-results-topic: "electronic-order-results"
 
+server:
+  servlet:
+    session:
+      timeout: 1m
+
+logging.level.org.springframework.web.socket: DEBUG
+logging.level.org.springframework.messaging: DEBUG

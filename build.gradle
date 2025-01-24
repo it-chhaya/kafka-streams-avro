@@ -57,6 +57,9 @@ dependencies {
     // If you need to generate classes from Avro schemas
     implementation 'org.apache.avro:avro:1.12.0'
 
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'com.opencsv:opencsv:5.7.1'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.kafka:kafka-streams'
     implementation 'org.springframework.kafka:spring-kafka'
