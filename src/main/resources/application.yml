@@ -25,7 +25,6 @@ spring:
         specific.avro.reader: false
         value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicNameStrategy
         spring.json.trusted.packages: "*"
-      group-id: ${spring.application.name}
     producer:
       properties:
         schema.registry.url: http://localhost:8081

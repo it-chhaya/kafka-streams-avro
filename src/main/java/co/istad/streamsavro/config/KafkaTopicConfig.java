@@ -13,6 +13,15 @@ public class KafkaTopicConfig {
     private String electronicOrdersTopic;
 
     @Bean
+    public NewTopic report1RequestTopic() {
+        return TopicBuilder
+                .name("report1-request")
+                .partitions(3)
+                .replicas(3)
+                .build();
+    }
+
+    @Bean
     public NewTopic electronicOrdersTopic() {
         return TopicBuilder
                 .name(electronicOrdersTopic)

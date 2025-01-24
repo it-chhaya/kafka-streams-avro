@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "download_jobs")
+@Table(name = "download_jobs", schema = "employees")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,10 +38,8 @@ public class DownloadJob {
     @Column(columnDefinition = "TEXT")
     private String remark;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "completed_at")
     private LocalDateTime updatedAt;
 
 
