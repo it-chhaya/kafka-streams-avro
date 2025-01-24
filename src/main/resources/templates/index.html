@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script type="text/javascript">
+
     // Store socket connection
     let stompClient = null;
 
@@ -16,15 +17,20 @@
     function connect() {
       const socket = new SockJS('/ws');
       stompClient = Stomp.over(socket);
-      stompClient.connect({}, function(frame) {
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/notification', function(notification) {
-          const data = JSON.parse(notification.body);
-          console.log(data)
-          showNotification(data);
-          setProcessingState(false);
-        });
-      });
+      stompClient.connect({},
+              function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/notification', function(notification) {
+                  const data = JSON.parse(notification.body);
+                  showNotification(data);
+                });
+              },
+              function(error) {
+                console.log('Error: ' + error);
+                socket.close()
+                setTimeout(() => connect(), 5000); // Reconnect after 5 seconds
+              }
+      );
     }
 
     function setProcessingState(isProcessing) {
