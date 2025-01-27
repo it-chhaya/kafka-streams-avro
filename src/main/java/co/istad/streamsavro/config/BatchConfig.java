@@ -1,10 +1,9 @@
 package co.istad.streamsavro.config;
 
-import co.istad.streamsavro.domain.Report1;
+import co.istad.streamsavro.domain.Report2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -31,31 +30,29 @@ public class BatchConfig {
 
     @Bean
     @StepScope
-    public JdbcCursorItemReader<Report1> reader(
-            @Value("#{jobParameters['jobId']}") Long jobId,
-            @Value("#{jobParameters['duration']}") Long duration
+    public JdbcCursorItemReader<Report2> reader(
+            @Value("#{jobParameters['depId']}") String depId
     ) {
-        return new JdbcCursorItemReaderBuilder<Report1>()
+        return new JdbcCursorItemReaderBuilder<Report2>()
                 .name("report1")
                 .dataSource(dataSource)
-                .sql("SELECT * FROM employees.process_long_running_task(?, ?)")
+                .sql("SELECT * FROM employees.get_employee_report(?)")
                 .preparedStatementSetter(ps -> {
-                    ps.setLong(1, jobId);
-                    ps.setLong(2, duration);
+                    ps.setString(1, depId);
                 })
-                .rowMapper(new BeanPropertyRowMapper<>(Report1.class))
+                .rowMapper(new BeanPropertyRowMapper<>(Report2.class))
                 .build();
     }
 
     @Bean
     @StepScope
-    public FlatFileItemWriter<Report1> writer() {
-        return new FlatFileItemWriterBuilder<Report1>()
+    public FlatFileItemWriter<Report2> writer() {
+        return new FlatFileItemWriterBuilder<Report2>()
                 .name("report1")
-                .resource(new FileSystemResource("/report"))
+                .resource(new FileSystemResource("C:\\Users\\iLJiMae\\OneDrive\\Documents\\test-report\\report-1.csv"))
                 .delimited()
-                .names("process_long_running_task")
-                .headerCallback(writer -> writer.write("process_long_running_task"))
+                .names("employee_unique_id","employee_first_name","employee_last_name")
+                .headerCallback(writer -> writer.write("employee_unique_id,employee_first_name,employee_last_name"))
                 .build();
     }
 
@@ -63,8 +60,8 @@ public class BatchConfig {
     public Step exportStep(JobRepository jobRepository,
                            PlatformTransactionManager transactionManager) {
         return new StepBuilder("exportStep", jobRepository)
-                .<Report1, Report1>chunk(100, transactionManager)
-                .reader(reader(null, null))
+                .<Report2, Report2>chunk(100, transactionManager)
+                .reader(reader(null))
                 .writer(writer())
                 .build();
     }
