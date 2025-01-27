@@ -50,7 +50,12 @@ spring:
       key-store-password: password123
       key-password: password123
 
+
 topic:
   electronic-orders-topic: "electronic-orders-topic"
   electronic-order-results-topic: "electronic-order-results"
 
+server:
+  servlet:
+    session:
+      timeout: 1m

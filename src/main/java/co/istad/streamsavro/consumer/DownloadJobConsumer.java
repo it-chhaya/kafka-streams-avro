@@ -40,7 +40,7 @@ public class DownloadJobConsumer {
 
         // Start execute function or procedure
         downloadJobRepository.executeLongRunningProcess(downloadJob.getId(),
-                60);
+                180);
 
         downloadJob.setIsCompleted(true);
         downloadJob.setUpdatedAt(LocalDateTime.now());

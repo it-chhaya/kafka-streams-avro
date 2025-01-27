@@ -15,7 +15,7 @@ public class SecurityConfig {
 
         // Config endpoints
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/login").permitAll()
+                .requestMatchers("/login", "/ws/**").permitAll()
                 .anyRequest().authenticated()
         );
 
