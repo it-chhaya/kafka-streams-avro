@@ -1,4 +1,7 @@
 spring:
+  batch:
+    jdbc:
+      initialize-schema: always
   datasource:
     url: jdbc:postgresql://localhost:5168/employees
     username: postgres

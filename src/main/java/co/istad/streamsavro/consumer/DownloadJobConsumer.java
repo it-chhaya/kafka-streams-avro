@@ -11,6 +11,11 @@ import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Printed;
+import org.springframework.batch.core.*;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -27,8 +32,11 @@ public class DownloadJobConsumer {
     private final DownloadJobRepository downloadJobRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
+    private final JobLauncher jobLauncher;
+    private final Job job;
+
     @KafkaListener(topics = "report1-request", groupId = "report1.download")
-    public void report1Consumer(Long jobId) {
+    public void report1Consumer(Long jobId) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
 
         log.info("Consumer started - report 1");
         log.info("Consumer started - report 1 - job id {}", jobId);
@@ -39,8 +47,20 @@ public class DownloadJobConsumer {
                 .orElseThrow();
 
         // Start execute function or procedure
-        downloadJobRepository.executeLongRunningProcess(downloadJob.getId(),
-                180);
+        /*downloadJobRepository.executeLongRunningProcess(downloadJob.getId(),
+                180);*/
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis())
+                .addString("depId", "d005")
+                .toJobParameters();
+
+        JobExecution jobExecution = jobLauncher.run(job, jobParameters);
+
+        System.out.println("------------------------------");
+        System.out.printf("%d\n%s\n%s",
+                jobExecution.getJobId(),
+                jobExecution.getJobInstance().getJobName(),
+                jobExecution.getStatus());
 
         downloadJob.setIsCompleted(true);
         downloadJob.setUpdatedAt(LocalDateTime.now());
