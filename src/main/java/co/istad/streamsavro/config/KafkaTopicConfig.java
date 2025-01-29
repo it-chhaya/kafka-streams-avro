@@ -13,6 +13,24 @@ public class KafkaTopicConfig {
     private String electronicOrdersTopic;
 
     @Bean
+    public NewTopic airlineOutputTopic() {
+        return TopicBuilder
+                .name("AirlineOutputTopic")
+                .partitions(3)
+                .replicas(3)
+                .build();
+    }
+
+    @Bean
+    public NewTopic airlineInputTopic() {
+        return TopicBuilder
+                .name("AirlineInputTopic")
+                .partitions(3)
+                .replicas(3)
+                .build();
+    }
+
+    @Bean
     public NewTopic report1RequestTopic() {
         return TopicBuilder
                 .name("report1-request")
